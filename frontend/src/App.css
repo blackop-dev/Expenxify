@@ -89,6 +89,38 @@ button {
   font-size: 24px;
 }
 
+.summary-main {
+  min-width: 0;
+}
+
+.summary-secondary {
+  display: flex;
+  gap: 24px;
+  text-align: right;
+}
+
+.summary-secondary div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.summary-secondary span {
+  color: #a3a3a3;
+  font-size: 12px;
+}
+
+.summary-secondary strong {
+  font-size: 16px;
+  color: white;
+}
+
+.selected-month-label {
+  margin: 0;
+  color: #a3a3a3;
+  font-size: 12px;
+}
+
 /* Cards */
 
 .card {
@@ -365,38 +397,118 @@ button {
 
 @media (max-width: 600px) {
   .app {
-    padding: 24px 14px;
+    padding: 18px 12px 30px;
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  .month-selector {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .refresh-button,
+  .cancel-button {
+    min-height: 44px;
+    padding: 8px 14px;
   }
 
   .header h1 {
     font-size: 28px;
   }
 
+  .header p {
+    font-size: 13px;
+  }
+
+  .summary-card {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
   .summary-card h2 {
     font-size: 30px;
   }
 
+  .summary-card {
+    display: block;
+  }
+
+  .summary-secondary {
+    margin-top: 18px;
+    padding-top: 15px;
+    border-top: 1px solid #404040;
+
+    flex-direction: row;
+    justify-content: space-between;
+
+    text-align: left;
+  }
+
   .card {
     padding: 18px;
+    border-radius: 14px;
   }
 
   .form-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
   }
 
   .full-width {
     grid-column: span 1;
   }
 
-  .expense-item {
-    align-items: flex-start;
+  .field input,
+  .field select {
+    min-height: 48px;
+    font-size: 16px;
   }
 
-  .expense-actions {
-    margin-left: 10px;
+  .primary-button {
+    min-height: 48px;
+    font-size: 15px;
   }
 
   .analytics-grid {
     grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    min-height: 280px;
+  }
+
+  .expense-item {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .expense-actions {
+    margin-left: 5px;
+    flex-shrink: 0;
+  }
+
+  .expense-actions strong {
+    font-size: 14px;
+  }
+
+  .small-button {
+    min-height: 36px;
+    padding: 6px 7px;
   }
 }

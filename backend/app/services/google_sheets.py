@@ -29,13 +29,14 @@ def get_sheet():
 # --------------------------------
 
 def format_expense(row):
+
     return {
         "id": int(row["ID"]),
         "amount": float(row["Amount"]),
-        "date": row["Date"],
-        "remark": row["Remark"],
-        "category": row["Category"],
-        "payment_mode": row["Payment Mode"]
+        "date": str(row["Date"]),
+        "remark": str(row["Remark"]),
+        "category": str(row["Category"]),
+        "payment_mode": str(row["Payment Mode"])
     }
 
 

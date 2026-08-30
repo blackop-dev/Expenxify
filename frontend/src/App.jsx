@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   ResponsiveContainer,
@@ -15,6 +15,7 @@ import {
 } from "recharts";
 
 import "./App.css";
+
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -48,20 +49,32 @@ const CATEGORY_COLORS = {
 };
 
 function App() {
+
+  const amountInputRef = useRef(null);
+
   const [expenses, setExpenses] = useState([]);
 
+  const [selectedMonth, setSelectedMonth] = useState(
+    new Date().toISOString().slice(0, 7)
+  );
+
   const [amount, setAmount] = useState("");
+
   const [date, setDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+
   const [remark, setRemark] = useState("");
+
   const [category, setCategory] = useState("Food");
+
   const [paymentMode, setPaymentMode] = useState("UPI");
 
   const [editingId, setEditingId] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+
+  const [saving, setSaving] = useState(false);
   // -----------------------------
   // Fetch expenses
   // -----------------------------
@@ -213,68 +226,102 @@ function App() {
   // Statistics
   // -----------------------------
 
-  const totalSpent = useMemo(() => {
-    return expenses.reduce(
-      (total, expense) =>
-        total + Number(expense.amount),
-      0
+// -----------------------------
+// Statistics
+// -----------------------------
+
+const filteredExpenses = useMemo(() => {
+  return expenses.filter((expense) =>
+    expense.date.startsWith(selectedMonth)
+  );
+}, [expenses, selectedMonth]);
+
+
+const totalSpent = useMemo(() => {
+  return filteredExpenses.reduce(
+    (total, expense) =>
+      total + Number(expense.amount),
+    0
+  );
+}, [filteredExpenses]);
+
+
+const today = new Date()
+  .toISOString()
+  .split("T")[0];
+
+
+const todaySpent = expenses.reduce(
+  (total, expense) => {
+
+    if (expense.date === today) {
+      return total + Number(expense.amount);
+    }
+
+    return total;
+
+  },
+  0
+);
+
+
+const categoryTotals = useMemo(() => {
+
+  const totals = {};
+
+  filteredExpenses.forEach((expense) => {
+
+    const category = expense.category;
+
+    totals[category] =
+      (totals[category] || 0) +
+      Number(expense.amount);
+
+  });
+
+  return totals;
+
+}, [filteredExpenses]);
+
+
+const categoryChartData = useMemo(() => {
+
+  return Object.entries(categoryTotals)
+    .map(([name, value]) => ({
+      name,
+      value,
+    }))
+    .sort((a, b) => b.value - a.value);
+
+}, [categoryTotals]);
+
+
+const dailyChartData = useMemo(() => {
+
+  const totals = {};
+
+  filteredExpenses.forEach((expense) => {
+
+    const date = expense.date;
+
+    totals[date] =
+      (totals[date] || 0) +
+      Number(expense.amount);
+
+  });
+
+  return Object.entries(totals)
+    .map(([date, amount]) => ({
+      date,
+      amount,
+    }))
+    .sort(
+      (a, b) =>
+        new Date(a.date) -
+        new Date(b.date)
     );
-  }, [expenses]);
 
-  const categoryTotals = useMemo(() => {
-    const totals = {};
-
-    expenses.forEach((expense) => {
-      const category = expense.category;
-
-      totals[category] =
-        (totals[category] || 0) +
-        Number(expense.amount);
-    });
-
-    return totals;
-  }, [expenses]);
-
-    // -----------------------------
-  // Category Chart Data
-  // -----------------------------
-
-  const categoryChartData = useMemo(() => {
-    return Object.entries(categoryTotals)
-      .map(([name, value]) => ({
-        name,
-        value,
-      }))
-      .sort((a, b) => b.value - a.value);
-  }, [categoryTotals]);
-
-
-  // -----------------------------
-  // Daily Spending Data
-  // -----------------------------
-
-  const dailyChartData = useMemo(() => {
-    const totals = {};
-
-    expenses.forEach((expense) => {
-      const date = expense.date;
-
-      totals[date] =
-        (totals[date] || 0) +
-        Number(expense.amount);
-    });
-
-    return Object.entries(totals)
-      .map(([date, amount]) => ({
-        date,
-        amount,
-      }))
-      .sort(
-        (a, b) =>
-          new Date(a.date) -
-          new Date(b.date)
-      );
-  }, [expenses]);
+}, [filteredExpenses]);
 
   // -----------------------------
   // UI
@@ -298,7 +345,7 @@ function App() {
             className="refresh-button"
             onClick={fetchExpenses}
           >
-            Refresh
+            Sync
           </button>
         </header>
 
@@ -307,17 +354,44 @@ function App() {
 
         <section className="summary-card">
 
-          <div>
+          <div className="summary-main">
+
             <span>Total spent</span>
 
             <h2>
               ₹{totalSpent.toLocaleString("en-IN")}
             </h2>
+
+            <p className="selected-month-label">
+              {new Date(
+                `${selectedMonth}-01T00:00:00`
+              ).toLocaleDateString("en-IN", {
+                month: "long",
+                year: "numeric",
+              })}
+            </p>
+
           </div>
 
-          <div className="summary-count">
-            <strong>{expenses.length}</strong>
-            <span>expenses</span>
+
+          <div className="summary-secondary">
+
+            <div>
+              <span>Today</span>
+
+              <strong>
+                ₹{todaySpent.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div>
+              <span>Expenses</span>
+
+              <strong>
+                {filteredExpenses.length}
+              </strong>
+            </div>
+
           </div>
 
         </section>
@@ -363,6 +437,7 @@ function App() {
                 <label>Amount</label>
 
                 <input
+                  ref={amountInputRef}
                   type="number"
                   min="1"
                   step="0.01"
@@ -732,7 +807,7 @@ function App() {
 
             <div className="expense-list">
 
-              {expenses
+              {filteredExpenses
                 .slice()
                 .reverse()
                 .map((expense) => (
