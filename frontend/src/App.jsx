@@ -93,6 +93,17 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   const [saving, setSaving] = useState(false);
+
+  const [darkMode, setDarkMode] = useState(() => {
+  return localStorage.getItem("expenxify-theme") === "dark";
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "expenxify-theme",
+      darkMode ? "dark" : "light"
+    );
+  }, [darkMode]);
   // -----------------------------
   // Fetch expenses
   // -----------------------------
@@ -346,7 +357,7 @@ const dailyChartData = useMemo(() => {
   // -----------------------------
 
   return (
-    <div className="app">
+    <div className={`app ${darkMode ? "dark" : ""}`}>
       <div className="container">
 
         {/* Header */}
@@ -355,16 +366,26 @@ const dailyChartData = useMemo(() => {
           <div>
             <h1>Expenxify</h1>
             <p>
-              A simple view of where your money goes.
+              "Money follows my brotha" -Lord Ravi Kishan
             </p>
           </div>
 
-          <button
-            className="refresh-button"
-            onClick={fetchExpenses}
-          >
-            Sync
-          </button>
+          <div className="header-actions">
+            <button
+              className="theme-button"
+              onClick={() => setDarkMode(!darkMode)}
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? "Light" : "Dark"}
+            </button>
+
+            <button
+              className="refresh-button"
+              onClick={fetchExpenses}
+            >
+              Sync
+            </button>
+          </div>
         </header>
 
 
@@ -621,6 +642,8 @@ const dailyChartData = useMemo(() => {
                           className="progress-fill"
                           style={{
                             width: `${percentage}%`,
+                            backgroundColor:
+                              CATEGORY_COLORS[categoryName] || "#737373",
                           }}
                         />
                       </div>
@@ -836,20 +859,28 @@ const dailyChartData = useMemo(() => {
                   >
 
                     <div className="expense-main">
-
                       <h3>
                         {expense.remark ||
                           expense.category}
                       </h3>
 
                       <p>
-                        {expense.category}
+                        <span
+                          className="expense-category"
+                          style={{
+                            color:
+                              CATEGORY_COLORS[expense.category] ||
+                              "var(--muted)",
+                          }}
+                        >
+                          {expense.category}
+                        </span>
+
                         {" · "}
                         {expense.payment_mode}
                         {" · "}
                         {expense.date}
                       </p>
-
                     </div>
 
 
