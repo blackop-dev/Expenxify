@@ -20,13 +20,21 @@ import "./App.css";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const CATEGORIES = [
+  // Daily
   "Food",
-  "Travel",
-  "Shopping",
-  "Entertainment",
-  "Education",
+  "Travel (Clg-Flat)",
+  // Flat
+  "Flat Groceries",
+  "Flat Expenses",
+  "Rent|Maid",
   "Bills",
-  "Other",
+  //Personal
+  "Entertainment",
+  "Dates",
+  "Shopping",
+  //Other
+  "Dues",
+  "Misc.",
 ];
 
 const PAYMENT_MODES = [
@@ -39,13 +47,23 @@ const PAYMENT_MODES = [
 ];
 
 const CATEGORY_COLORS = {
-  Food: "#f59e0b",
-  Travel: "#3b82f6",
-  Shopping: "#8b5cf6",
-  Entertainment: "#ec4899",
-  Education: "#10b981",
-  Bills: "#ef4444",
-  Other: "#737373",
+  "Food": "#dca201ff",
+  "Travel (Clg-Flat)": "#4D96FF",
+
+  // Flat
+  "Flat Groceries": "#50995aff",
+  "Flat Expenses": "#00695aff",
+  "Rent|Maid": "#cc0000ff",
+  "Bills": "#000000ff",
+
+  // Personal
+  "Entertainment": "#FF9671",
+  "Dates": "#c559a4ff",
+  "Shopping": "#6a00dbff",
+
+  // Other
+  "Dues": "#00628fff",
+  "Misc.": "#A8A8A8",
 };
 
 function App() {
