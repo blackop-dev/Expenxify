@@ -49,6 +49,7 @@ const PAYMENT_MODES = [
 const CATEGORY_COLORS = {
   "Food": "#dca201ff",
   "Travel (Clg-Flat)": "#4D96FF",
+  "Travel": "#e17705ff",
 
   // Flat
   "Flat Groceries": "#50995aff",
