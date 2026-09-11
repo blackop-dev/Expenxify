@@ -23,10 +23,10 @@ const CATEGORIES = [
   // Daily
   "Food",
   "Travel (Clg-Flat)",
+  "Travel",
   // Flat
   "Flat Groceries",
   "Flat Expenses",
-  "Rent|Maid",
   "Bills",
   //Personal
   "Entertainment",
@@ -52,9 +52,8 @@ const CATEGORY_COLORS = {
 
   // Flat
   "Flat Groceries": "#50995aff",
-  "Flat Expenses": "#00695aff",
-  "Rent|Maid": "#cc0000ff",
-  "Bills": "#000000ff",
+  "Flat Expenses": "#003169ff",
+  "Bills": "#cd3434ff",
 
   // Personal
   "Entertainment": "#FF9671",
